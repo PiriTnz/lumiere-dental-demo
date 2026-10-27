@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumière Dental Clinic — AI Assistant Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f1ec;
+  --bg-warm: #ebe6dd;
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --accent: #2d5547;
+  --accent-light: #3d7560;
+  --gold: #c9a961;
+  --user-bubble: #1a1a1a;
+  --bot-bubble: #ffffff;
+  --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter Tight', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(45, 85, 71, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(201, 169, 97, 0.08) 0%, transparent 40%);
+}
+
+/* Grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: multiply;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  margin-bottom: 60px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-mark {
+  width: 44px;
+  height: 44px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.logo-mark::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+}
+
+.logo-mark svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--gold);
+  z-index: 2;
+}
+
+.logo-text {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.logo-text span {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.nav {
+  display: flex;
+  gap: 36px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.nav a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+.nav a:hover { color: var(--accent); }
+
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 100px;
+}
+
+.demo-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #4ade80;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
+}
+
+/* Main Grid */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+/* Left side - Hero */
+.hero-content {
+  padding-top: 20px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+  padding-left: 32px;
+  position: relative;
+}
+
+.eyebrow::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.hero-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(48px, 5vw, 72px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 32px;
+  color: var(--ink);
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 300;
+}
+
+.hero-desc {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 48px;
+  max-width: 480px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 48px;
+  padding: 32px 0;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 38px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-num em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.feature-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.feature-icon svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--gold);
+  stroke-width: 2.5;
+  fill: none;
+}
+
+/* Right side - Chat Demo */
+.chat-wrapper {
+  position: relative;
+  perspective: 1000px;
+}
+
+.chat-decoration {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--accent);
+  transform: rotate(8deg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chat-decoration svg {
+  width: 40px;
+  height: 40px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.chat-container {
+  background: var(--bot-bubble);
+  border-radius: 28px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  height: 640px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.chat-header {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-header::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, var(--gold) 0%, transparent 60%);
+  opacity: 0.2;
+}
+
+.bot-avatar {
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--gold);
+}
+
+.bot-info { flex: 1; }
+
+.bot-name {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.bot-status {
+  font-size: 12px;
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.bot-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #4ade80;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #4ade80;
+}
+
+.chat-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-control-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.chat-control-btn:hover { background: rgba(255,255,255,0.2); }
+
+.chat-control-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: white;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 28px 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: 
+    linear-gradient(180deg, var(--bg-warm) 0%, var(--bot-bubble) 100%);
+}
+
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+.message {
+  max-width: 78%;
+  display: flex;
+  flex-direction: column;
+  animation: messageIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes messageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message.bot { align-self: flex-start; }
+.message.user { align-self: flex-end; }
+
+.message-bubble {
+  padding: 14px 18px;
+  border-radius: 20px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  position: relative;
+}
+
+.message.bot .message-bubble {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-bottom-left-radius: 4px;
+  color: var(--ink);
+}
+
+.message.user .message-bubble {
+  background: var(--ink);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.message-time {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+  padding: 0 8px;
+  opacity: 0.7;
+}
+
+.message.user .message-time { text-align: right; }
+
+/* Quick reply buttons */
+.quick-replies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.quick-reply {
+  padding: 8px 14px;
+  background: var(--bg-warm);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.quick-reply:hover {
+  background: var(--accent);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Service cards in chat */
+.service-cards {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.service-card {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.service-card:hover {
+  border-color: var(--accent);
+  transform: translateX(2px);
+}
+
+.service-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-warm);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.service-info { flex: 1; }
+
+.service-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.service-meta {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.service-arrow {
+  color: var(--accent);
+  font-size: 16px;
+}
+
+/* Time slots */
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.time-slot {
+  padding: 10px 6px;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+
+.time-slot:hover {
+  border-color: var(--accent);
+  background: var(--bg-warm);
+}
+
+.time-slot.selected {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.time-slot-day {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+
+.time-slot-hour {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Confirmation card */
+.confirmation-card {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 18px;
+  margin-top: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.confirmation-card::after {
+  content: '✓';
+  position: absolute;
+  top: -20px;
+  right: -10px;
+  font-size: 120px;
+  opacity: 0.08;
+  font-weight: 100;
+}
+
+.confirmation-title {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.confirmation-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.confirmation-row:last-child { border: none; }
+
+.confirmation-label { opacity: 0.8; }
+.confirmation-value { font-weight: 500; }
+
+/* Typing indicator */
+.typing {
+  display: flex;
+  align-self: flex-start;
+  background: white;
+  padding: 14px 18px;
+  border-radius: 20px;
+  border-bottom-left-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.06);
+  gap: 4px;
+}
+
+.typing-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--ink-soft);
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* Input area */
+.chat-input-area {
+  padding: 16px 20px;
+  background: white;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-input {
+  flex: 1;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: var(--bg);
+  border-radius: 100px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-input:focus { border-color: var(--accent); }
+
+.send-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.send-btn:hover {
+  background: var(--accent-light);
+  transform: scale(1.05);
+}
+
+.send-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: white;
+  transform: rotate(-45deg);
+}
+
+/* Powered by */
+.powered-by {
+  position: absolute;
+  bottom: 6px;
+  right: 12px;
+  font-size: 9px;
+  color: var(--ink-soft);
+  opacity: 0.5;
+  letter-spacing: 0.05em;
+}
+
+/* Reset button */
+.reset-bar {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.reset-btn {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.15);
+  color: var(--ink-soft);
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-family: inherit;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reset-btn:hover {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+}
+
+@media (max-width: 968px) {
+  .main-grid { grid-template-columns: 1fr; gap: 48px; }
+  .nav { display: none; }
+  .stats { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .stat-num { font-size: 28px; }
+  .container { padding: 24px 20px; }
+  .chat-decoration { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="header">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8 2 6 5 6 8c0 2 1 4 1 7s-1 7 2 7c1.5 0 2-2 3-2s1.5 2 3 2c3 0 2-4 2-7s1-5 1-7c0-3-2-6-6-6z"/></svg>
+      </div>
+      <div class="logo-text">Lumière <span>Dental</span></div>
+    </div>
+    <nav class="nav">
+      <a href="#">Services</a>
+      <a href="#">Équipe</a>
+      <a href="#">Tarifs</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="demo-badge">Live Demo</div>
+  </header>
+
+  <div class="main-grid">
+    <!-- LEFT: Hero -->
+    <section class="hero-content">
+      <div class="eyebrow">AI Receptionist · 24/7</div>
+      <h1 class="hero-title">
+        Never miss<br>
+        a patient,<br>
+        <em>even at 3 AM.</em>
+      </h1>
+      <p class="hero-desc">
+        Meet Camille — your clinic's AI assistant who books appointments, 
+        answers questions, and qualifies leads while you sleep. 
+        Try the live demo on the right.
+      </p>
+
+      <div class="stats">
+        <div>
+          <div class="stat-num"><em>+62%</em></div>
+          <div class="stat-label">More bookings</div>
+        </div>
+        <div>
+          <div class="stat-num"><em>0s</em></div>
+          <div class="stat-label">Wait time</div>
+        </div>
+        <div>
+          <div class="stat-num"><em>24/7</em></div>
+          <div class="stat-label">Always on</div>
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>Multilingual — French, English, Arabic, Spanish</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>Syncs with Google Calendar & Calendly</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>WhatsApp, Instagram & website ready</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>GDPR compliant — patient data stays safe</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Chat Demo -->
+    <section class="chat-wrapper">
+      <div class="chat-decoration">
+        <svg viewBox="0 0 50 50">
+          <path d="M5 25 Q 25 5, 45 25" />
+          <polyline points="40 20, 45 25, 40 30" />
+        </svg>
+        <span>Try it now</span>
+      </div>
+
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="bot-avatar">C</div>
+          <div class="bot-info">
+            <div class="bot-name">Camille</div>
+            <div class="bot-status">Online · Replies instantly</div>
+          </div>
+          <div class="chat-controls">
+            <button class="chat-control-btn" title="Minimize">
+              <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="messages">
+          <!-- Messages injected by JS -->
+        </div>
+
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" id="chat-input" placeholder="Type your message...">
+          <button class="send-btn" id="send-btn">
+            <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </button>
+        </div>
+
+        <div class="powered-by">Liliyon Studio</div>
+      </div>
+
+      <div class="reset-bar">
+        <button class="reset-btn" id="reset-btn">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+          RESTART CONVERSATION
+        </button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const messagesEl = document.getElementById('messages');
+const input = document.getElementById('chat-input');
+const sendBtn = document.getElementById('send-btn');
+const resetBtn = document.getElementById('reset-btn');
+
+let conversationStep = 0;
+let selectedService = null;
+let selectedTime = null;
+
+const conversation = [
+  {
+    bot: "Hi there! 👋 I'm Camille, the AI assistant at <strong>Lumière Dental</strong>. I can help you book an appointment, answer questions about our services, or check our prices. How can I help you today?",
+    quickReplies: ["📅 Book an appointment", "💰 See prices", "❓ Ask a question"]
+  },
+  {
+    bot: "Wonderful! Let's get you booked. Which service do you need today?",
+    services: [
+      { icon: "🪥", name: "General check-up", meta: "30 min · €60" },
+      { icon: "✨", name: "Teeth whitening", meta: "60 min · €280" },
+      { icon: "🦷", name: "Dental implant consult", meta: "45 min · Free" },
+      { icon: "🌟", name: "Orthodontics consult", meta: "30 min · €50" }
+    ]
+  },
+  {
+    bot: "Great choice! Here are the next available slots with Dr. Marchand. Which one works best for you?",
+    timeSlots: [
+      { day: "Mon", hour: "9:30" },
+      { day: "Tue", hour: "14:00" },
+      { day: "Tue", hour: "16:30" },
+      { day: "Wed", hour: "10:00" },
+      { day: "Thu", hour: "11:15" },
+      { day: "Fri", hour: "15:45" }
+    ]
+  },
+  {
+    bot: "Perfect! Could you share your name and phone number so I can confirm the booking?",
+    expectInput: true
+  },
+  {
+    bot: "Done! Here's your confirmation:",
+    confirmation: true
+  },
+  {
+    bot: "I've also sent the details to your phone via SMS 📱. Is there anything else you'd like? Maybe directions to the clinic or info about our payment plans?",
+    quickReplies: ["📍 Get directions", "💳 Payment options", "👋 That's all, thanks!"]
+  },
+  {
+    bot: "You're very welcome! Have a wonderful day, and we'll see you soon at Lumière Dental. ✨<br><br><em>This was a demo of what your AI assistant could do.</em>",
+    final: true
+  }
+];
+
+function addMessage(content, type = 'bot', time = null) {
+  const msg = document.createElement('div');
+  msg.className = `message ${type}`;
+  
+  const t = time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  msg.innerHTML = `
+    <div class="message-bubble">${content}</div>
+    <div class="message-time">${t}</div>
+  `;
+  messagesEl.appendChild(msg);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return msg;
+}
+
+function addTyping() {
+  const typing = document.createElement('div');
+  typing.className = 'typing';
+  typing.id = 'typing-indicator';
+  typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  messagesEl.appendChild(typing);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+function showStep(stepIndex) {
+  if (stepIndex >= conversation.length) return;
+  const step = conversation[stepIndex];
+  
+  addTyping();
+  
+  setTimeout(() => {
+    removeTyping();
+    const msg = addMessage(step.bot, 'bot');
+    
+    if (step.quickReplies) {
+      const wrap = document.createElement('div');
+      wrap.className = 'quick-replies';
+      step.quickReplies.forEach(reply => {
+        const btn = document.createElement('button');
+        btn.className = 'quick-reply';
+        btn.textContent = reply;
+        btn.onclick = () => handleQuickReply(reply, stepIndex);
+        wrap.appendChild(btn);
+      });
+      msg.querySelector('.message-bubble').appendChild(wrap);
+    }
+    
+    if (step.services) {
+      const wrap = document.createElement('div');
+      wrap.className = 'service-cards';
+      step.services.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'service-card';
+        card.innerHTML = `
+          <div class="service-icon">${s.icon}</div>
+          <div class="service-info">
+            <div class="service-name">${s.name}</div>
+            <div class="service-meta">${s.meta}</div>
+          </div>
+          <div class="service-arrow">→</div>
+        `;
+        card.onclick = () => handleServiceClick(s, stepIndex);
+        wrap.appendChild(card);
+      });
+      msg.querySelector('.message-bubble').appendChild(wrap);
+    }
+    
+    if (step.timeSlots) {
+      const wrap = document.createElement('div');
+      wrap.className = 'time-slots';
+      step.timeSlots.forEach(s => {
+        const slot = document.createElement('div');
+        slot.className = 'time-slot';
+        slot.innerHTML = `
+          <div class="time-slot-day">${s.day}</div>
+          <div class="time-slot-hour">${s.hour}</div>
+        `;
+        slot.onclick = () => handleTimeClick(s, slot, stepIndex);
+        wrap.appendChild(slot);
+      });
+      msg.querySelector('.message-bubble').appendChild(wrap);
+    }
+    
+    if (step.confirmation) {
+      const card = document.createElement('div');
+      card.className = 'confirmation-card';
+      card.innerHTML = `
+        <div class="confirmation-title">✓ Appointment Confirmed</div>
+        <div class="confirmation-row">
+          <span class="confirmation-label">Service</span>
+          <span class="confirmation-value">${selectedService?.name || 'General check-up'}</span>
+        </div>
+        <div class="confirmation-row">
+          <span class="confirmation-label">Date</span>
+          <span class="confirmation-value">${selectedTime?.day || 'Tue'}, ${selectedTime?.hour || '14:00'}</span>
+        </div>
+        <div class="confirmation-row">
+          <span class="confirmation-label">Doctor</span>
+          <span class="confirmation-value">Dr. Marchand</span>
+        </div>
+        <div class="confirmation-row">
+          <span class="confirmation-label">Reference</span>
+          <span class="confirmation-value">#LD-2026-0847</span>
+        </div>
+      `;
+      msg.querySelector('.message-bubble').appendChild(card);
+    }
+    
+    if (step.expectInput) {
+      input.focus();
+      input.placeholder = "e.g. Sarah Martin, +33 6 12 34 56 78";
+    }
+  }, 1200);
+}
+
+function handleQuickReply(reply, stepIndex) {
+  // Remove all quick replies from previous messages
+  document.querySelectorAll('.quick-replies, .service-cards, .time-slots').forEach(el => {
+    if (!el.classList.contains('locked')) {
+      el.style.opacity = '0.4';
+      el.style.pointerEvents = 'none';
+      el.classList.add('locked');
+    }
+  });
+  
+  addMessage(reply, 'user');
+  
+  if (reply.includes('appointment')) {
+    setTimeout(() => showStep(1), 600);
+  } else if (reply.includes('prices')) {
+    setTimeout(() => {
+      addTyping();
+      setTimeout(() => {
+        removeTyping();
+        addMessage("Here are our most popular services:<br><br><strong>• General check-up:</strong> €60<br><strong>• Teeth whitening:</strong> €280<br><strong>• Dental implant:</strong> from €1,200<br><strong>• Orthodontics:</strong> from €2,500<br><br>Would you like to book one?", 'bot');
+        setTimeout(() => showStep(1), 1500);
+      }, 1200);
+    }, 600);
+  } else if (reply.includes('directions')) {
+    setTimeout(() => {
+      addTyping();
+      setTimeout(() => {
+        removeTyping();
+        addMessage("📍 We're at <strong>14 Rue de Rivoli, 75004 Paris</strong>.<br><br>The nearest metro is Hôtel de Ville (lines 1 & 11), 2 min walk. There's paid parking on Rue Saint-Antoine.", 'bot');
+        setTimeout(() => showStep(6), 1500);
+      }, 1000);
+    }, 600);
+  } else if (reply.includes('Payment')) {
+    setTimeout(() => {
+      addTyping();
+      setTimeout(() => {
+        removeTyping();
+        addMessage("We accept:<br>💳 Credit / debit cards<br>🇫🇷 Carte Vitale (mutuelle reimbursement)<br>📱 Apple Pay / Google Pay<br><br>For treatments over €500, we offer 3-month interest-free installments.", 'bot');
+        setTimeout(() => showStep(6), 1500);
+      }, 1000);
+    }, 600);
+  } else if (reply.includes("That's all")) {
+    setTimeout(() => showStep(6), 600);
+  } else {
+    setTimeout(() => showStep(stepIndex + 1), 600);
+  }
+}
+
+function handleServiceClick(service, stepIndex) {
+  selectedService = service;
+  document.querySelectorAll('.service-cards').forEach(el => {
+    el.style.opacity = '0.4';
+    el.style.pointerEvents = 'none';
+  });
+  addMessage(service.name, 'user');
+  setTimeout(() => showStep(2), 600);
+}
+
+function handleTimeClick(slot, el, stepIndex) {
+  selectedTime = slot;
+  document.querySelectorAll('.time-slots .time-slot').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  setTimeout(() => {
+    document.querySelectorAll('.time-slots').forEach(el => {
+      el.style.opacity = '0.4';
+      el.style.pointerEvents = 'none';
+    });
+    addMessage(`${slot.day}, ${slot.hour}`, 'user');
+    setTimeout(() => showStep(3), 600);
+  }, 400);
+}
+
+function handleSend() {
+  const text = input.value.trim();
+  if (!text) return;
+  
+  addMessage(text, 'user');
+  input.value = '';
+  
+  // Simple flow: if we're at name/phone step, continue
+  if (conversationStep === 3) {
+    conversationStep = 4;
+    setTimeout(() => showStep(4), 600);
+    setTimeout(() => showStep(5), 3000);
+  } else {
+    // Generic AI-like response for free input
+    setTimeout(() => {
+      addTyping();
+      setTimeout(() => {
+        removeTyping();
+        addMessage("I'd be happy to help with that! Would you like to book an appointment to discuss it in person?", 'bot');
+      }, 1000);
+    }, 400);
+  }
+}
+
+sendBtn.addEventListener('click', handleSend);
+input.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') handleSend();
+});
+
+resetBtn.addEventListener('click', () => {
+  messagesEl.innerHTML = '';
+  conversationStep = 0;
+  selectedService = null;
+  selectedTime = null;
+  input.value = '';
+  input.placeholder = 'Type your message...';
+  setTimeout(() => showStep(0), 300);
+});
+
+// Track step for input handling
+const originalShowStep = showStep;
+showStep = function(i) {
+  conversationStep = i;
+  originalShowStep(i);
+};
+
+// Start
+setTimeout(() => showStep(0), 800);
+</script>
+
+</body>
+</html>

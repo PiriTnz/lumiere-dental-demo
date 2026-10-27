@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+!.env.example
+.netlify/
+coverage/
+*.log
+__pycache__/
+*.blend1
+*.blend2

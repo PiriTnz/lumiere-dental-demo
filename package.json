@@ -1,0 +1,13 @@
+{
+  "name": "lumiere-dental-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Scripted receptionist conversation; treatment choices; appointment slot selection; conversation restart and typing indicators.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env scripts/dev-server.cjs",
+    "test": "node --test test/*.test.cjs"
+  }
+}

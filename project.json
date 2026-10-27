@@ -1,0 +1,41 @@
+{
+  "repo": "lumiere-dental-demo",
+  "name": "Lumière Dental",
+  "entry": "Lumie_re_Dental_Clinic___AI_Assistant_Demo.html",
+  "kind": "static",
+  "features": "Scripted receptionist conversation; treatment choices; appointment slot selection; conversation restart and typing indicators.",
+  "limits": "Responses and appointment choices are scripted in the browser. There is no model inference, appointment persistence, calendar integration, or real booking service.",
+  "topics": [
+    "dental",
+    "chat-interface",
+    "javascript",
+    "frontend"
+  ],
+  "files": [
+    "Lumie_re_Dental_Clinic___AI_Assistant_Demo.html"
+  ],
+  "visibility": "public",
+  "publication": "READY FOR PLAN APPROVAL",
+  "description": "Scripted receptionist conversation; treatment choices; appointment slot selection; conversation restart and typing indicators.",
+  "knownLimitations": [
+    "Responses and appointment choices are scripted in the browser. There is no model inference, appointment persistence, calendar integration, or real booking service."
+  ],
+  "validation": {
+    "installation": "passed (offline npm ci)",
+    "offlineTests": "passed",
+    "browser": {
+      "repo": "lumiere-dental-demo",
+      "checks": [
+        "isolated local HTTP startup",
+        "frontend renders",
+        "desktop and mobile screenshots"
+      ],
+      "pageErrors": [],
+      "failedRequests": [],
+      "httpErrors": [],
+      "mobileOverflow": false,
+      "passed": true
+    },
+    "build": "not applicable; original sources have no bundling step"
+  }
+}
